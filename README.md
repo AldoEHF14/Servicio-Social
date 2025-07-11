@@ -6,3 +6,4 @@
     - Dos redes neuronales (entradas = 3 y Salida = 1) y (entradas = 3 y Salida = 1)
     - Support Vector Regressor
     - Visualización de grupos
+3. Agregar metricas
