@@ -7,3 +7,5 @@
     - Support Vector Regressor
     - Visualización de grupos
 3. Agregar metricas
+4. ...
+   
