@@ -1,4 +1,4 @@
-# SS Servicio-Social
+# SS Prediccion de Emociones
 
 1. Crear un programa para leer varios archivos Json.
 2. Crear programas con rendimiendto de :
