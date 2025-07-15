@@ -3,39 +3,38 @@ import os
 import glob
 from pathlib import Path
 
-#procesamos el archivo json.
+# Procesar un archivo JSON individual
 def procesar_archivo_json(archivo):
-    try: 
+    try:
         with open(archivo, 'r', encoding='utf-8') as f:
             datos = json.load(f)
 
-            #Tenemos que verificar que existe la sección en el json
             if 'History_Experiment_Simulated' not in datos:
                 print(f"El archivo {archivo} no contiene la sección 'History_Experiment_Simulated'")
                 return []
-            
+
             historia = datos['History_Experiment_Simulated']
+            initials = datos.get('profile', {}).get('initials', 'N/A')
             datos_procesados = []
 
-            #e iteramos sobre cada ronda
             for ronda_idx, ronda in enumerate(historia):
-                for diseno_idx, diseno in enumerate(ronda):
+                iteracion = ronda_idx + 1
+                for diseno in ronda:
                     fila = [
+                        initials,
+                        iteracion,
                         diseno['time'],
                         diseno['risk'],
                         diseno['arrival'],
-                        float(diseno['sliderDissatisfiedSatisfied']),
-                        float(diseno['sliderBoredExcited'])
-
+                        int(float(diseno['sliderDissatisfiedSatisfied'])),
+                        int(float(diseno['sliderBoredExcited'])),
                     ]
-
                     datos_procesados.append(fila)
             return datos_procesados
-    
+
     except FileNotFoundError:
         print(f"El archivo {archivo} no existe")
         return []
-    
     except json.JSONDecodeError:
         print(f"Error al procesar el archivo {archivo}: formato JSON inválido")
         return []
@@ -45,13 +44,13 @@ def procesar_archivo_json(archivo):
     except Exception as e:
         print(f'Error inesperado al procesar el archivo {archivo}: {str(e)}')
         return []
-    
 
+# Escribir un archivo CSV
 def escribir_csv(datos, archivoSalida, incluirEncabezado=True):
     try:
         with open(archivoSalida, 'w', encoding='utf-8') as f:
             if incluirEncabezado:
-                encabezados = "time risk arrival sliderDissatisfiedSatisfied sliderBoredExcited"
+                encabezados = "initials iteracion time risk arrival valencia arousal"
                 f.write(encabezados + '\n')
 
             for fila in datos:
@@ -59,13 +58,13 @@ def escribir_csv(datos, archivoSalida, incluirEncabezado=True):
                 f.write(linea + '\n')
 
         print(f"Archivo CSV creado exitosamente: {archivoSalida}")
-
     except Exception as e:
         print(f'Error al escribir el archivo CSV: {e}')
 
-def convertir_archivo_individual(rutaArchivo, direcatorioSalida = None):
+# Convertir archivo JSON individual
+def convertir_archivo_individual(rutaArchivo, direcatorioSalida=None):
     datos = procesar_archivo_json(rutaArchivo)
-    if not datos: 
+    if not datos:
         print(f'No se encontraron datos para procesar')
         return
     nombreBase = Path(rutaArchivo).stem
@@ -76,32 +75,27 @@ def convertir_archivo_individual(rutaArchivo, direcatorioSalida = None):
     escribir_csv(datos, archivoSalida)
     print(f'Procesados {len(datos)} diseños del archivo {rutaArchivo}')
 
-
+# Convertir todos los archivos JSON en un directorio
 def convertir_directorio_completo(directorio_entrada, archivo_salida_consolidado="resultados.csv"):
-    # Buscar todos los archivos JSON
     patron = os.path.join(directorio_entrada, "*.json")
     archivos_json = glob.glob(patron)
-    
+
     if not archivos_json:
         print(f"No se encontraron archivos JSON en {directorio_entrada}")
         return
-    
+
     print(f"Encontrados {len(archivos_json)} archivos JSON para procesar")
-    
-    # Procesar todos los archivos
     todos_los_datos = []
     archivos_procesados = 0
-    
+
     for archivo in archivos_json:
         print(f"\nProcesando: {os.path.basename(archivo)}")
         datos = procesar_archivo_json(archivo)
-        
         if datos:
             todos_los_datos.extend(datos)
             archivos_procesados += 1
             print(f"  - {len(datos)} diseños extraídos")
-    
-    # Escribir archivo consolidado
+
     if todos_los_datos:
         escribir_csv(todos_los_datos, archivo_salida_consolidado)
         print(f"\n{'='*50}")
@@ -112,7 +106,7 @@ def convertir_directorio_completo(directorio_entrada, archivo_salida_consolidado
     else:
         print("No se encontraron datos para consolidar")
 
-
+# Interfaz principal
 def main():
     print("Conversor de archivos JSON a CSV")
     opcion = input("\n¿Qué deseas hacer?\n1. Convertir archivo individual\n2. Convertir directorio completo\nOpción: ")
@@ -123,17 +117,11 @@ def main():
     elif opcion == "2":
         directorio = input("Ruta del directorio con archivos JSON: ")
         nombre_salida = input("Nombre del archivo para los resultados: ")
-        
         if not nombre_salida:
             nombre_salida = "resultados.csv"
         else:
             nombre_salida = nombre_salida + ".csv"
         convertir_directorio_completo(directorio, nombre_salida)
 
-
-
 if __name__ == "__main__":
     main()
-
-
-
