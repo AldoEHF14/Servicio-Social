@@ -12,5 +12,6 @@
     - Dos redes neuronales (entradas = 5 y Salida = 1) y (entradas = 5 y Salida = 1)
     - Support Vector Regressor (entradas = 5 y Salidas = 2)
     - Visualización de grupos
+5. Investigacion sobre nuestra script (algoritmo aprendizaje incremental)
    
    
