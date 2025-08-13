@@ -7,11 +7,11 @@
     - Support Vector Regressor
     - Visualización de grupos
 3. Agregar grafica y tabla.
-4. Crear redes neuronales de:
+4. Crear redes neuronales de y probar con limites:
     - Una Red neuronal (entradas = 5 y Salidas = 2)
     - Dos redes neuronales (entradas = 5 y Salida = 1) y (entradas = 5 y Salida = 1)
     - Support Vector Regressor (entradas = 5 y Salidas = 2)
     - Visualización de grupos
-5. Investigacion sobre nuestra script (algoritmo aprendizaje incremental)
+6. Investigacion sobre nuestra script (algoritmo aprendizaje incremental)
    
    
