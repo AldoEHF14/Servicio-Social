@@ -7,7 +7,7 @@
     - Support Vector Regressor
     - Visualización de grupos
 3. Agregar grafica y tabla.
-4. Crear redes neuronales de:
+4. Crear redes neuronales dos de:
     - Una Red neuronal (entradas = 5 y Salidas = 2)
     - crear dos redes neuronales (entradas = 5 y Salida = 1) y (entradas = 5 y Salida = 1)
     - Support Vector Regressor (entradas = 5 y Salidas = 2)
